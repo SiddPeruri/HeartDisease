@@ -11,11 +11,16 @@ device = torch.device("cpu")
 heart = pd.read_csv("heart.csv")
 heart=heart.drop(['thal'],axis=1)
 #print(heart.head())
+#print(heart.columns)
+#exit(0)
 
 train, test = train_test_split(heart, test_size=0.1)
 
-trainInputs = train[train.columns[:11]].values
+trainInputs = train[['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca']].values
 #print(trainInputs)
+
+
+
 trainTargets = train[train.columns[12]].values
 #print(trainTargets)
 
@@ -25,12 +30,15 @@ inputs = torch.tensor(trainInputs, dtype=torch.float)
 targets = torch.tensor(trainTargets, dtype=torch.long)
 #print(targets)
 
-testInputs = torch.tensor(test[test.columns[:11]].values, dtype=torch.float)
+testInputs = torch.tensor(test[['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca']].values, dtype=torch.float)
 #print(testInputs)
 testTarget = torch.tensor(test[test.columns[12]].values, dtype=torch.long)
 #print(testTarget)
 
+#print(testInputs.size())
 
+#print(inputs.shape[1])
+#exit(0)
 
 class NeuralNetwork(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
@@ -77,12 +85,6 @@ with torch.no_grad():
     print(predicted_classes)
     print(testTarget)
 
-#testPredict = model(testInputs)
-
-#export ONNX model
-
-model.train(False)
-
 # Export the model
 '''
 torch.onnx.export(model,               # model being run
@@ -95,14 +97,20 @@ torch.onnx.export(model,               # model being run
                   output_names = ['target'], # the model's output names
                   dynamic_axes={'input' : {0 : 'batch_size'},    # variable length axes
                                 'output' : {0 : 'batch_size'}})
+
+
+x = torch.rand((12, 1), dtype=torch.float)
+torch.onnx.export(
+            model,
+            x,
+            "heart.onnx",
+            export_params=True,
+            opset_version=10,
+            do_constant_folding=True,
+            #input_names = ['age', 'sex', 'cp', 'trestbps', 'chol', 'fbs', 'restecg', 'thalach', 'exang', 'oldpeak', 'slope', 'ca'],   # the model's input names
+            output_names = ['target'])
+
+
 '''
 
-torch.onnx.export(
-                model,
-                testInputs,
-                "mlp.onnx",
-                export_params=True,
-                opset_version=10,
-                do_constant_folding=True,
-                output_names = ['target'])
-
+torch.save(model.state_dict(), "heart.model")
