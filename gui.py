@@ -5,19 +5,29 @@ import torch.nn as nn
 import tkinter as tk
 from tkinter import *
 from mlprunner import mlprun
+import customtkinter as ctk
 
 
 mlp = mlprun()
 global answer
 
 
-root = tk.Tk()
+root = ctk.CTk()
 
-global answer
+root.geometry("1920x1080")
+ctk.set_appearance_mode("System")
+ctk.set_default_color_theme("blue")
+yoffset=320
+xoffset = 40
 
 def input():
+    gpp = sex.get()
+    if gpp == 'M' or gpp == 'm':
+        gpp = 1
+    if gpp == 'F' or gpp == 'f':
+        gpp = 0
     try:
-        inputs = torch.tensor([[float(age.get()), float(sex.get()), float(cp.get()), float(bps.get()), float(chol.get()), float(fbs.get()), float(restcg.get()), float(thalach.get()), float(exang.get()), float(oldpeak.get()), float(slope.get()), float(ca.get())]])
+        inputs = torch.tensor([[float(age.get()), float(gpp), float(cp.get()), float(bps.get()), float(chol.get()), float(fbs.get()), float(restcg.get()), float(thalach.get()), float(exang.get()), float(oldpeak.get()), float(slope.get()), float(ca.get())]])
         output = mlp.modelin(inputs)
         return str(output)
     except:
@@ -27,75 +37,80 @@ def input():
 
 
 def update():
-    out.config(text=input())
+    answer = str(input())
+    if answer == 'tensor([0])':
+        answer = 'Heart disease unlikely'
+    if answer == 'tensor([1])':
+        answer = 'Heart disease likely'
+    out.configure(text=answer)
     print(str(input()))
     print("answer should appear")
 
-age = Entry(root)
-age.place(x=50, y=0)
-agelabel = tk.Label(root, text="age")
-agelabel.place(x=0, y=0)
+age = ctk.CTkEntry(root)
+age.place(x=xoffset+100, y=yoffset)
+agelabel = ctk.CTkLabel(root, text="age", font=("Arial", 20))
+agelabel.place(x=xoffset, y=yoffset)
 
-sex = Entry(root)
-sex.place(x=50, y=25)
-sexlabel = tk.Label(root, text="sex")
-sexlabel.place(x=0, y=25)
+sex = ctk.CTkEntry(root)
+sex.place(x=xoffset+100, y=yoffset+30)
+sexlabel = ctk.CTkLabel(root, text="sex", font=("Arial", 20))
+sexlabel.place(x=xoffset, y=yoffset+30)
 
-cp = Entry(root)
-cp.place(x=50, y=50)
-cplabel = tk.Label(root, text="cp")
-cplabel.place(x=0, y=50)
+cp = ctk.CTkEntry(root)
+cp.place(x=xoffset+100, y=yoffset+60)
+cplabel = ctk.CTkLabel(root, text="cp", font=("Arial", 20))
+cplabel.place(x=xoffset, y=yoffset+60)
 
-bps = Entry(root)
-bps.place(x=50, y=75)
-bpslabel = tk.Label(root, text="trestbps")
-bpslabel.place(x=0, y=75)
+bps = ctk.CTkEntry(root)
+bps.place(x=xoffset+100, y=yoffset+90)
+bpslabel = ctk.CTkLabel(root, text="trestbps", font=("Arial", 20))
+bpslabel.place(x=xoffset, y=yoffset+90)
 
-chol = Entry(root)
-chol.place(x=60, y=100)
-chollabel = tk.Label(root, text="cholesterol")
-chollabel.place(x=0, y=100)
+chol = ctk.CTkEntry(root)
+chol.place(x=xoffset+100, y=yoffset+120)
+chollabel = ctk.CTkLabel(root, text="cholesterol", font=("Arial", 20))
+chollabel.place(x=xoffset, y=yoffset+120)
 #fbs
-fbs = Entry(root)
-fbs.place(x=50, y=125)
-fbslabel = tk.Label(root, text="fbs")
-fbslabel.place(x=0, y=125)
+fbs = ctk.CTkEntry(root)
+fbs.place(x=xoffset+100, y=yoffset+150)
+fbslabel = ctk.CTkLabel(root, text="fbs", font=("Arial", 20))
+fbslabel.place(x=xoffset, y=yoffset+150)
 #restecg
-restcg = Entry(root)
-restcg.place(x=50, y=150)
-restcglabel = tk.Label(root, text="restcg")
-restcglabel.place(x=0, y=150)
+restcg = ctk.CTkEntry(root)
+restcg.place(x=xoffset+100, y=yoffset+180)
+restcglabel = ctk.CTkLabel(root, text="restcg", font=("Arial", 20))
+restcglabel.place(x=xoffset, y=yoffset+180)
 #thalach
-thalach = Entry(root)
-thalach.place(x=50, y=175)
-thalachlabel = tk.Label(root, text="thalach")
-thalachlabel.place(x=0, y=175)
+thalach = ctk.CTkEntry(root)
+thalach.place(x=xoffset+100, y=yoffset+210)
+thalachlabel = ctk.CTkLabel(root, text="thalach", font=("Arial", 20))
+thalachlabel.place(x=xoffset, y=yoffset+210)
 #exang
-exang = Entry(root)
-exang.place(x=50, y=200)
-exanglabel = tk.Label(root, text="exang")
-exanglabel.place(x=0, y=200)
+exang = ctk.CTkEntry(root)
+exang.place(x=xoffset+100, y=yoffset+240)
+exanglabel = ctk.CTkLabel(root, text="exang", font=("Arial", 20))
+exanglabel.place(x=xoffset, y=yoffset+240)
 #oldpeak
-oldpeak = Entry(root)
-oldpeak.place(x=50, y=225)
-oldpeaklabel = tk.Label(root, text="oldpeak")
-oldpeaklabel.place(x=0, y=225)
+oldpeak = ctk.CTkEntry(root)
+oldpeak.place(x=xoffset+100, y=yoffset+270)
+oldpeaklabel = ctk.CTkLabel(root, text="oldpeak", font=("Arial", 20))
+oldpeaklabel.place(x=xoffset, y=yoffset+270)
 #slope
-slope = Entry(root)
-slope.place(x=50, y=250)
-slopelabel = tk.Label(root, text="slope")
-slopelabel.place(x=0, y=250)
+slope = ctk.CTkEntry(root)
+slope.place(x=xoffset+100, y=yoffset+300)
+slopelabel = ctk.CTkLabel(root, text="slope", font=("Arial", 20))
+slopelabel.place(x=xoffset, y=yoffset+300)
 #ca
-ca = Entry(root)
-ca.place(x=50, y=275)
-calabel = tk.Label(root, text="ca")
-calabel.place(x=0, y=275)
+ca = ctk.CTkEntry(root)
+ca.place(x=xoffset+100, y=yoffset+330)
+calabel = ctk.CTkLabel(root, text="ca", font=("Arial", 20))
+calabel.place(x=xoffset, y=yoffset+330)
 
 
-B = tk.Button(root, text= 'Enter', command=lambda: update())
-B.place(x=0, y= 300)
-out = tk.Label(root, text="")
-out.pack(anchor=tk.CENTER)
+B = ctk.CTkButton(root, text= 'Enter', command=lambda: update())
+B.place(x=xoffset+40, y= yoffset+360)
+out = ctk.CTkLabel(root, text="", font=("Arial", 20))
+out.pack(anchor=ctk.CENTER, pady=460)
 
 
 
