@@ -21,12 +21,14 @@ class App(ctk.CTk):
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("blue")
 
+        self.titleWidget = ctk.CTkLabel(self, text="Heart Disease Prediction Science Fair Project 2022-2023", font=("Arial", 25))
+        self.titleWidget.grid(row=0, column=0, padx=5, pady=5)
+
         self.ioframe = genericframe(self)
-        self.ioframe.grid(row=0, column = 0)
+        self.ioframe.grid(row=1, column = 0)
 
         self.ioframe.createinputframe()
         self.ioframe.createoutputframe()
-
 
 if __name__ == "__main__":
     app = App()

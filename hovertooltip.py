@@ -4,11 +4,12 @@ import PIL as p
 
 class ToolTip(object):
 
-    def __init__(self, widget):
+    def __init__(self, widget, frame):
         self.widget = widget
         self.tipwindow = None
         self.id = None
         self.x = self.y = 0
+        self.master = frame
 
     def showtip(self, text):
         "Display text in tooltip window"
@@ -18,7 +19,7 @@ class ToolTip(object):
         x, y, cx, cy = self.widget.bbox("insert")
         x = x + self.widget.winfo_rootx() + 57
         y = y + cy + self.widget.winfo_rooty() +27
-        self.tipwindow = tw = ctk.CTkToplevel(self.widget)
+        self.tipwindow = tw = ctk.CTkToplevel(self.master)
         tw.wm_overrideredirect(1)
         tw.wm_geometry("+%d+%d" % (x, y))
         label = ctk.CTkLabel(tw, text=self.text, fg_color='#333333', text_color='white', width=190, height=100, corner_radius=10, font=("tahoma", 12))
@@ -30,14 +31,14 @@ class ToolTip(object):
         if tw:
             tw.destroy()
 
-def CreateToolTip(self, text, row, column, padx=0, pady=0, size=(15, 14)):
+def CreateToolTip(master, text, row, column, padx=0, pady=0, size=(15, 14)):
     my_image = ctk.CTkImage(light_image=p.Image.open("inforev.png"), dark_image=p.Image.open("inforev.png"), size=size)
-    label = ctk.CTkLabel(self, text='', image=my_image)
-    label.grid(row=row, column=column, padx=padx, pady=pady)
-    toolTip = ToolTip(label)
+    mylabel = ctk.CTkLabel(master, text='', image=my_image)
+    mylabel.grid(row=row, column=column, padx=padx, pady=pady)
+    toolTip = ToolTip(mylabel, master)
     def enter(event):
         toolTip.showtip(text)
     def leave(event):
         toolTip.hidetip()
-    label.bind('<Enter>', enter)
-    label.bind('<Leave>', leave)
+    mylabel.bind('<Enter>', enter)
+    mylabel.bind('<Leave>', leave)

@@ -16,17 +16,30 @@ class genericframe(ctk.CTkFrame):
     def __init__(self, *args, headername='frame', **kwargs):
         super().__init__(*args, **kwargs)
 
+
+
+        self.tabview = ctk.CTkTabview(self, height=400, width=1870)
+        self.tabview.grid(row=0, column=0, padx=25, pady=15)
+        self.tabview.grid_propagate(False)
+
+        self.tabview.add("Neural Network")
+        self.tabview.add("Data")
+
+
+
     def createinputframe(self):
         self.yoffset = 320
         self.xoffset = 40
 
-        self.inputframe = ctk.CTkFrame(self, corner_radius=15)
+        self.inputframe = ctk.CTkFrame(self.tabview.tab("Neural Network"), height=320, width=650, corner_radius=15)
+        self.inputframe.grid_propagate(False)
         self.inputframe.grid(row=0, column=0, pady=20, padx=20)
+
 
         self.age = ctk.CTkEntry(self.inputframe)
         self.age.grid(row=1, column=1, pady=5, sticky=W)
         self.agelabel = ctk.CTkLabel(self.inputframe, text="age", font=("Arial", 20))
-        self.agelabel.grid(row=1, column=0, padx=20, pady=5, sticky=W)  # place(x=self.xoffset, y=self.yoffset)
+        self.agelabel.grid(row=1, column=0, padx=20, pady=15, sticky=W)  # place(x=self.xoffset, y=self.yoffset)
 
         self.sex = ctk.CTkOptionMenu(self.inputframe, values=['Male', 'Female'])  # CTkEntry(root)
         self.sex.grid(row=2, column=1, pady=5, sticky=W)  # place(x=self.xoffset + 100, y=self.yoffset + 30)
@@ -37,7 +50,7 @@ class genericframe(ctk.CTkFrame):
                                                   'asymptomatic'])  # CTkEntry(self)
         self.cp.grid(row=1, column=4, pady=5, sticky=W)  # place(x=self.xoffset + 100, y=self.yoffset + 60)
         self.cplabel = ctk.CTkLabel(self.inputframe, text="chest pain type", font=("Arial", 20))
-        self.cplabel.grid(row=1, column=3, padx=20, pady=5, sticky=E)  # (x=self.xoffset, y=self.yoffset + 60)
+        self.cplabel.grid(row=1, column=3, padx=15, pady=5, sticky=E)  # (x=self.xoffset, y=self.yoffset + 60)
         CreateToolTip(self.inputframe,
                       "Type of chest pain: \n Value 1: typical angina, \nValue 2: atypical angina, \nValue 3: non-anginal pain, \nValue 4: asymptomatic",
                       row=1, column=5, padx=8, pady=5)
@@ -58,7 +71,7 @@ class genericframe(ctk.CTkFrame):
         self.fbslabel = ctk.CTkLabel(self.inputframe, text="fbs", font=("Arial", 20))
         self.fbslabel.grid(row=3, column=0, padx=20, pady=5, sticky=W)  # place(x=self.xoffset, y=self.yoffset + 150)
         # restecg
-        self.restcg = ctk.CTkEntry(self.inputframe)
+        self.restcg = ctk.CTkOptionMenu(self.inputframe, values=["normal", "ST-T wave abnormality", "probable or definite left ventricular hypertrophy by Estes' criteria"])#CTkEntry(self.inputframe)
         self.restcg.grid(row=4, column=1, pady=5, sticky=W)  # place(x=self.xoffset + 100, y=self.yoffset + 180)
         self.restcglabel = ctk.CTkLabel(self.inputframe, text="rest ecg", font=("Arial", 20))
         self.restcglabel.grid(row=4, column=0, padx=20, pady=5, sticky=W)  # place(x=self.xoffset, y=self.yoffset + 180)
@@ -97,12 +110,14 @@ class genericframe(ctk.CTkFrame):
         CreateToolTip(self.inputframe, "Number of major vessels colored by flourosopy", row=6, column=5, padx=8, pady=5)
 
         self.B = ctk.CTkButton(self.inputframe, text='Enter', command=lambda: self.updateoutput())#, command= )#lambda: update())
-        self.B.grid(row=7, column=2, padx=20, pady=5)#place(x=self.xoffset + 40, y=self.yoffset + 360)
+        self.B.grid(row=7, column=3, padx=20, pady=5)#place(x=self.xoffset + 40, y=self.yoffset + 360)
 
     def getinputs(self):
         gpp = self.sex.get()
         fbsvar = self.fbs.get()
         cptype = self.cp.get()
+        cg = self.restcg.get()
+        mlp = mlprun()
         if gpp == 'Male':
             gpp = 1
         if gpp == 'Female':
@@ -122,19 +137,26 @@ class genericframe(ctk.CTkFrame):
         if cptype == 'asymptomatic':
             cptype = 3
 
+        if cg == "normal:":
+            cg=0
+        if cg== 'ST-T wave abnormality':
+            cg=1
+        if cg== "probable or definite left ventricular hypertrophy by Estes' criteria":
+            cg=2
         try:
-            tensor = torch.tensor(
+            self.tensor = torch.tensor(
                 [[float(self.age.get()), float(gpp), float(cptype), float(self.bps.get()), float(self.chol.get()),
-                  float(fbsvar), float(self.restcg.get()), float(self.thalach.get()), float(self.exang.get()),
+                  float(fbsvar), float(cg), float(self.thalach.get()), float(self.exang.get()),
                   float(self.oldpeak.get()), float(self.slope.get()), float(self.ca.get())]], dtype=torch.float)
 
-            return self.mlp.modelin(tensor)
+            return mlp.modelin(self.tensor)
         except:
             print("null")
+            print(self.tensor)
             exit(1)
 
     def createoutputframe(self):
-        self.outputframe = ctk.CTkFrame(self, corner_radius=15)
+        self.outputframe = ctk.CTkFrame(self.tabview.tab("Neural Network"), corner_radius=15)
         self.outputframe.grid(row=0, column=1, pady=20, padx=20)
         self.outputl = ctk.CTkLabel(self.outputframe, text="this to be fixed", font=("Comic Sans", 20))
         self.outputl.grid(row=0, column=0, pady=20, padx=20)
@@ -142,13 +164,13 @@ class genericframe(ctk.CTkFrame):
     def updateoutput(self):
         output = str(self.getinputs())
 
-        if output == "tensor([[0]])":
+        if output == "tensor([0])":
             self.outputl.configure(text="Heart disease unlikely")
             print(output)
-        if output == "tensor([[1]])":
+        elif output == "tensor([1])":
             self.outputl.configure(text="Heart disease likely")
             print(output)
         else:
             print(output)
             print("error")
-            exit(0)
+            exit(1)

@@ -58,7 +58,7 @@ model = NeuralNetwork(input_size=inputs.shape[1], hidden_size=256, num_classes=t
 model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-num_epochs = 10000
+num_epochs = 15000
 model.train(True)
 
 for epoch in range(num_epochs):
