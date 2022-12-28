@@ -216,6 +216,8 @@ class genericframe(ctk.CTkFrame):
 
         y = str(self.yinput.get())
 
+        print(x, y)
+
         fig = createplot(x=x, y=y)
 
         canvas = FigureCanvasTkAgg(fig, master=self.dataoutputframe)  # A tk.DrawingArea.

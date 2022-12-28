@@ -11,20 +11,12 @@ def createplot(x, y):
 
     # Get data
     d = pd.read_csv("heart.csv")
-    d = d.drop('fbs',axis=1)
-
-    # Compute the correlation matrix
-    corr = d.corr()
-
-    # Generate a mask for the upper triangle
-    mask = np.zeros_like(corr, dtype=bool)
-    mask[np.triu_indices_from(mask)] = True
 
     # Set up the matplotlib figure
     f, ax = plt.subplots(figsize=(10, 7))
 
     # Draw the dot plot
-    sns.stripplot(data=d, x=x, y=x, hue="target")
+    sns.stripplot(data=d, x=x, y=y, hue="target")
 
     return f
 
