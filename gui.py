@@ -27,8 +27,11 @@ class App(ctk.CTk):
         self.ioframe = genericframe(self)
         self.ioframe.grid(row=1, column = 0)
 
-        self.ioframe.createinputframe()
-        self.ioframe.createoutputframe()
+        self.ioframe.createnninputframe()
+        self.ioframe.creatennoutputframe()
+
+        self.ioframe.createdatainputs()
+        #self.ioframe.createdataoutputs()
 
 if __name__ == "__main__":
     app = App()

@@ -8,6 +8,12 @@ from mlprunner import mlprun
 import customtkinter as ctk
 from PIL import Image
 from hovertooltip import CreateToolTip
+from tkintergraph import createplot
+import tkinter
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from string import ascii_letters
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 
 
@@ -19,15 +25,18 @@ class genericframe(ctk.CTkFrame):
 
 
         self.tabview = ctk.CTkTabview(self, height=400, width=1870)
-        self.tabview.grid(row=0, column=0, padx=25, pady=15)
-        self.tabview.grid_propagate(False)
+        self.tabview.pack()
+        #self.tabview.grid_propagate(False)
 
         self.tabview.add("Neural Network")
         self.tabview.add("Data")
 
 
 
-    def createinputframe(self):
+
+
+
+    def createnninputframe(self):
         self.yoffset = 320
         self.xoffset = 40
 
@@ -109,7 +118,7 @@ class genericframe(ctk.CTkFrame):
         self.calabel.grid(row=6, column=3, padx=20, pady=5, sticky=W)  # place(x=self.xoffset, y=self.yoffset + 330)
         CreateToolTip(self.inputframe, "Number of major vessels colored by flourosopy", row=6, column=5, padx=8, pady=5)
 
-        self.B = ctk.CTkButton(self.inputframe, text='Enter', command=lambda: self.updateoutput())#, command= )#lambda: update())
+        self.B = ctk.CTkButton(self.inputframe, text='Enter', command=lambda: self.updateoutput())
         self.B.grid(row=7, column=3, padx=20, pady=5)#place(x=self.xoffset + 40, y=self.yoffset + 360)
 
     def getinputs(self):
@@ -137,25 +146,25 @@ class genericframe(ctk.CTkFrame):
         if cptype == 'asymptomatic':
             cptype = 3
 
-        if cg == "normal:":
+
+        if cg == "normal":
             cg=0
         if cg== 'ST-T wave abnormality':
             cg=1
         if cg== "probable or definite left ventricular hypertrophy by Estes' criteria":
             cg=2
         try:
-            self.tensor = torch.tensor(
-                [[float(self.age.get()), float(gpp), float(cptype), float(self.bps.get()), float(self.chol.get()),
+            tensor = torch.tensor([[float(self.age.get()), float(gpp), float(cptype), float(self.bps.get()), float(self.chol.get()),
                   float(fbsvar), float(cg), float(self.thalach.get()), float(self.exang.get()),
                   float(self.oldpeak.get()), float(self.slope.get()), float(self.ca.get())]], dtype=torch.float)
 
-            return mlp.modelin(self.tensor)
+            return mlp.modelin(tensor)
         except:
-            print("null")
-            print(self.tensor)
+            print("issue")
+            #print(self.tensor)
             exit(1)
 
-    def createoutputframe(self):
+    def creatennoutputframe(self):
         self.outputframe = ctk.CTkFrame(self.tabview.tab("Neural Network"), corner_radius=15)
         self.outputframe.grid(row=0, column=1, pady=20, padx=20)
         self.outputl = ctk.CTkLabel(self.outputframe, text="this to be fixed", font=("Comic Sans", 20))
@@ -174,3 +183,45 @@ class genericframe(ctk.CTkFrame):
             print(output)
             print("error")
             exit(1)
+
+    def createdatainputs(self):
+
+        self.datainputframe = ctk.CTkFrame(self.tabview.tab("Data"), height=320, width=500, corner_radius=15)
+        self.datainputframe.grid_propagate(False)
+        self.datainputframe.grid(row=0, column=0, pady=20, padx=20)
+
+        self.xinputlabel = ctk.CTkLabel(self.datainputframe, text="X axis", font=("Comic Sans", 20))
+        self.xinputlabel.grid(row=1, column=0, pady=10, padx=10)
+        self.yinputlabel = ctk.CTkLabel(self.datainputframe, text="Y axis", font=("Comic Sans", 20))
+        self.yinputlabel.grid(row=1, column=3, pady=10, padx=10)
+
+        self.xinput = ctk.CTkOptionMenu(self.datainputframe, values=["age",'sex','cp','trestbps','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca'])#ctk.CTkEntry(self.datainputframe)
+        self.xinput.grid(row=2, column=0, pady=10, padx=10)
+        self.yinput = ctk.CTkOptionMenu(self.datainputframe, values=["age",'sex','cp','trestbps','chol','fbs','restecg','thalach','exang','oldpeak','slope','ca'])#ctk.CTkEntry(self.datainputframe)
+        self.yinput.grid(row=2, column=3, pady=10, padx=10)
+
+        self.databutton = ctk.CTkButton(self.datainputframe, text="Enter", font=("Comic Sans", 20), command=lambda: self.updateoutputs())
+        self.databutton.grid(row=3, column=2, pady=10)
+
+    def getdatainputs(self):
+        outputx = str(self.xinput.get())
+        outputy = str(self.yinput.get())
+
+        print(outputx, outputy)
+        return outputx, outputy
+
+    def updateoutputs(self):
+
+        x, y = self.getdatainputs()
+
+        self.dataoutputframe = ctk.CTkFrame(self.tabview.tab("Data"), corner_radius=15)
+        self.dataoutputframe.grid(row=0, column=1, pady=20, padx=20)
+
+        self.dataouttitle = ctk.CTkLabel(self.dataoutputframe, text=f'{y} by {x}')
+        self.dataouttitle.pack()
+
+        fig = createplot(x, y)
+
+        canvas = FigureCanvasTkAgg(fig, master=self.dataoutputframe)  # A tk.DrawingArea.
+        canvas.draw()
+        canvas.get_tk_widget().pack()
