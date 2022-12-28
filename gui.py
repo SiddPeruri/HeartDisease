@@ -6,31 +6,28 @@ import tkinter as tk
 from tkinter import *
 from mlprunner import mlprun
 import customtkinter as ctk
-from inputframe import inputs
+from genericframe import genericframe
 
 
 mlp = mlprun()
 global answer
 
+class App(ctk.CTk):
+    def __init__(self):
+        super().__init__()
 
-root = ctk.CTk()
+        self.title("Heart disease prediction app(Science fair 2022-2023)")
+        self.geometry("1920x1080")
+        ctk.set_appearance_mode("System")
+        ctk.set_default_color_theme("blue")
 
+        self.ioframe = genericframe(self)
+        self.ioframe.grid(row=0, column = 0)
 
-
-
-
-
-root.geometry("1920x1080")
-root.title('Heart disease prediction app(Science fair 2022-2023)')
-ctk.set_appearance_mode("System")
-ctk.set_default_color_theme("blue")
-
-inputsframe = inputs(root, headername='inputs:')
-
-inputsframe.grid(row=1, column=0, pady=20)
-
-title = ctk.CTkLabel(root, text="Heart Disease Prediction App", font=('Comic Sans', 46))
-title.grid(row=0, column=0, padx=10)
+        self.ioframe.createinputframe()
+        self.ioframe.createoutputframe()
 
 
-root.mainloop()
+if __name__ == "__main__":
+    app = App()
+    app.mainloop()

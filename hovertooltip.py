@@ -1,6 +1,6 @@
 import customtkinter as ctk
 import re
-from PIL import Image
+import PIL as p
 
 class ToolTip(object):
 
@@ -30,8 +30,8 @@ class ToolTip(object):
         if tw:
             tw.destroy()
 
-def CreateToolTip(self, text, row, column, padx=0, pady=0, size=(60, 60)):
-    my_image = ctk.CTkImage(light_image=Image.open("info.png"), dark_image=Image.open("info.png"), size=size)
+def CreateToolTip(self, text, row, column, padx=0, pady=0, size=(15, 14)):
+    my_image = ctk.CTkImage(light_image=p.Image.open("inforev.png"), dark_image=p.Image.open("inforev.png"), size=size)
     label = ctk.CTkLabel(self, text='', image=my_image)
     label.grid(row=row, column=column, padx=padx, pady=pady)
     toolTip = ToolTip(label)
