@@ -203,24 +203,20 @@ class genericframe(ctk.CTkFrame):
         self.databutton = ctk.CTkButton(self.datainputframe, text="Enter", font=("Comic Sans", 20), command=lambda: self.updateoutputs())
         self.databutton.grid(row=3, column=2, pady=10)
 
-    def getdatainputs(self):
-        outputx = str(self.xinput.get())
-        outputy = str(self.yinput.get())
-
-        print(outputx, outputy)
-        return outputx, outputy
-
     def updateoutputs(self):
 
-        x, y = self.getdatainputs()
 
         self.dataoutputframe = ctk.CTkFrame(self.tabview.tab("Data"), corner_radius=15)
         self.dataoutputframe.grid(row=0, column=1, pady=20, padx=20)
 
-        self.dataouttitle = ctk.CTkLabel(self.dataoutputframe, text=f'{y} by {x}')
+        self.dataouttitle = ctk.CTkLabel(self.dataoutputframe, text=f'{self.yinput.get()} by {self.xinput.get()}')
         self.dataouttitle.pack()
 
-        fig = createplot(x, y)
+        x = str(self.xinput.get())
+
+        y = str(self.yinput.get())
+
+        fig = createplot(x=x, y=y)
 
         canvas = FigureCanvasTkAgg(fig, master=self.dataoutputframe)  # A tk.DrawingArea.
         canvas.draw()
