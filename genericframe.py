@@ -25,7 +25,7 @@ class genericframe(ctk.CTkFrame):
 
 
         self.tabview = ctk.CTkTabview(self, height=400, width=1870)
-        self.tabview.pack()
+        self.tabview.pack(padx=25, pady=10)
         #self.tabview.grid_propagate(False)
 
         self.tabview.add("Neural Network")
