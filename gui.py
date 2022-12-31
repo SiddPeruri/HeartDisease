@@ -8,16 +8,12 @@ from mlprunner import mlprun
 import customtkinter as ctk
 from genericframe import genericframe
 
-
-mlp = mlprun()
-global answer
-
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
         self.title("Heart disease prediction app(Science fair 2022-2023)")
-        self.geometry("1920x1080")
+        self.geometry("1024x768")
         ctk.set_appearance_mode("System")
         ctk.set_default_color_theme("blue")
 
@@ -33,6 +29,11 @@ class App(ctk.CTk):
         self.ioframe.createdatainputs()
         #self.ioframe.createdataoutputs()
 
+    def animateHeart(self, indx):
+        self.ioframe.animateHeart(indx)
+
 if __name__ == "__main__":
     app = App()
+    app.after(500, app.animateHeart, 0)
     app.mainloop()
+
