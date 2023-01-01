@@ -93,7 +93,7 @@ class genericframe(ctk.CTkFrame):
         CreateToolTip(self.inputframe, "Is fasting blood sugar greater than 120 mg/dl?", row=3, column=2, padx=8,
                       pady=5)
         # restecg
-        self.restcg = ctk.CTkOptionMenu(self.inputframe, values=["normal", "ST-T wave abnormality", "probable or definite left ventricular hypertrophy by Estes' criteria"])#CTkEntry(self.inputframe)
+        self.restcg = ctk.CTkOptionMenu(self.inputframe, values=["normal", "ST-T wave abnormal", "left ventricular hypertrophy"])#CTkEntry(self.inputframe)
         self.restcg.grid(row=4, column=1, pady=5, sticky=W)  # place(x=self.xoffset + 100, y=self.yoffset + 180)
         self.restcglabel = ctk.CTkLabel(self.inputframe, text="rest ecg", font=("Arial", 20))
         self.restcglabel.grid(row=4, column=0, padx=20, pady=5, sticky=W)  # place(x=self.xoffset, y=self.yoffset + 180)
@@ -112,7 +112,7 @@ class genericframe(ctk.CTkFrame):
         # exang
         self.exang = ctk.CTkCheckBox(self.inputframe, onvalue=1, offvalue=0, text='')  # CTkEntry(root)
         self.exang.grid(row=5, column=1, pady=5, sticky=W)  # place(x=self.xoffset + 100, y=self.yoffset + 240)
-        self.exanglabel = ctk.CTkLabel(self.inputframe, text="agina", font=("Arial", 20))
+        self.exanglabel = ctk.CTkLabel(self.inputframe, text="angina", font=("Arial", 20))
         self.exanglabel.grid(row=5, column=0, padx=20, pady=5, sticky=W)  # place(x=self.xoffset, y=self.yoffset + 240)
         CreateToolTip(self.inputframe, "Whether the patient has exercise induced angina \nAngina is chest pain due to reduced blood flow to heart", row=5, column=2, padx=8, pady=5)
 
@@ -153,9 +153,9 @@ class genericframe(ctk.CTkFrame):
         if gpp == 'Female':
             gpp = 0
 
-        if fbsvar == "False":
+        if fbsvar == "False" or fbsvar == 0:
             fbsvar = 0
-        if fbsvar == "True":
+        if fbsvar == "True" or fbsvar == 1:
             fbsvar = 1
 
         if cptype == 'typical angina':
@@ -169,14 +169,14 @@ class genericframe(ctk.CTkFrame):
 
 
         if cg == "normal":
-            cg=0
-        if cg== 'ST-T wave abnormality':
-            cg=1
-        if cg== "probable or definite left ventricular hypertrophy by Estes' criteria":
-            cg=2
+            cgnum=0
+        if cg== 'ST-T wave abnormal':
+            cgnum=1
+        if cg== "left ventricular hypertrophy":
+            cgnum=2
         try:
             tensor = torch.tensor([[float(self.age.get()), float(gpp), float(cptype), float(self.bps.get()), float(self.chol.get()),
-                  float(fbsvar), float(cg), float(self.thalach.get()), float(self.exang.get()),
+                  float(fbsvar), float(cgnum), float(self.thalach.get()), float(self.exang.get()),
                   float(self.oldpeak.get()), float(self.slope.get()), float(self.ca.get())]], dtype=torch.float)
 
             return mlp.modelin(tensor)

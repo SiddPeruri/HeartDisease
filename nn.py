@@ -43,14 +43,17 @@ testTarget = torch.tensor(test[test.columns[12]].values, dtype=torch.long)
 class NeuralNetwork(nn.Module):
     def __init__(self, input_size, hidden_size, num_classes):
         super(NeuralNetwork, self).__init__()
-        self.fc1 = nn.Linear(input_size, hidden_size)
         self.relu = nn.ReLU()
-        self.fc2 = nn.Linear(hidden_size, num_classes)
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.fc2 = nn.Linear(hidden_size, hidden_size)
+        self.fc3 = nn.Linear(hidden_size, num_classes)
 
     def forward(self, x):
         out = self.fc1(x)
         out = self.relu(out)
         out = self.fc2(out)
+        out = self.relu(out)
+        out = self.fc3(out)
         return out
 
 model = NeuralNetwork(input_size=inputs.shape[1], hidden_size=256, num_classes=targets.max().item()+1)
@@ -58,15 +61,17 @@ model = NeuralNetwork(input_size=inputs.shape[1], hidden_size=256, num_classes=t
 model.to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-num_epochs = 15000
+num_epochs = 10000
 model.train(True)
+#file_obj = open("writing.txt", "w")
 
 for epoch in range(num_epochs):
     outputs = model(inputs.to(torch.float))
     loss = criterion(outputs, targets)
 
     print(f"Epoch: {epoch + 1}/{num_epochs}, Loss: {loss.item():.4f}")
-    print(outputs)
+    #print(outputs)
+    #file_obj.write(f'\n{loss.item():.4f}')
 
     optimizer.zero_grad()
     loss.backward()
@@ -82,8 +87,8 @@ with torch.no_grad():
     print(f'Test set loss: {loss.item():.4f}')
 
     _, predicted_classes = torch.max(probabilities, dim=1)
-    print(predicted_classes)
-    print(testTarget)
+    #print(predicted_classes)
+    #print(testTarget)
 
 # Export the model
 '''
@@ -113,4 +118,7 @@ torch.onnx.export(
 
 '''
 
-torch.save(model.state_dict(), "heart.model")
+#torch.save(model.state_dict(), "heart.model")
+#file_obj.close()
+
+
