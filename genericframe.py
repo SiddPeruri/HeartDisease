@@ -45,7 +45,7 @@ class genericframe(ctk.CTkFrame):
         self.yoffset = 320
         self.xoffset = 40
 
-        self.inputframe = ctk.CTkFrame(self.tabview.tab("Neural Network"), height=320, width=650, corner_radius=15)
+        self.inputframe = ctk.CTkFrame(self.tabview.tab("Neural Network"), height=320, width=700, corner_radius=15)
         self.inputframe.grid_propagate(False)
         self.inputframe.grid(row=0, column=0, pady=5, padx=5)
 
