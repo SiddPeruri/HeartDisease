@@ -118,7 +118,7 @@ torch.onnx.export(
 
 '''
 
-#torch.save(model.state_dict(), "heart.model")
-#file_obj.close()
+torch.save(model.state_dict(), "heart.model")
+file_obj.close()
 
 
