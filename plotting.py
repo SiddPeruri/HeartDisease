@@ -3,32 +3,32 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 
-heart = pd.read_csv("heart.csv")
-heart=heart.drop('fbs',axis=1)
-
+#heart = pd.read_csv("heart.csv")
+heart = pd.read_csv("aml_clinical_data.csv")
+heart=heart.drop('Atra Exposure',axis=1)
 sns.set_theme()
 
-#heart disease by age
-sns.countplot(x="age", hue="target", data=heart)
+#AML disease by age
+sns.countplot(x="Diagnosis Age", hue="Detected", data=heart)
 plt.show()
 
-#heart disease by cholestorol
-sns.countplot(x="chol", hue="target", data=heart)
+#AML disease by Blast Count
+sns.countplot(x="Blast Count", hue="Detected", data=heart)
 plt.show()
 
 #based on gender/sex
-sns.relplot(x='sex', hue='target', data=heart)
+sns.relplot(x='Sex', hue="Detected", data=heart)
 plt.show()
 
-#based on bps at rest
-sns.countplot(x="trestbps", hue="target", data=heart)
+#based on Platelet count
+sns.countplot(x="Platelet count preresection", hue="Detected", data=heart)
+plt.show()
+#based on Mutation count
+sns.countplot(x="Mutation Count", hue="Detected", data=heart)
 plt.show()
 
 def byvalue(value):
-    sns.countplot(x=value, hue="target", data=heart)
+    sns.countplot(x=value, hue="Detected", data=heart)
     plt.show()
-
-
-
 
 print("ended")
